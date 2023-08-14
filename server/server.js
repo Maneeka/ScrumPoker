@@ -38,9 +38,16 @@ app.all('*', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log(`A user connected with id: ${socket.id}`);
-    socket.on('name', (name) => {
+    
+    socket.on('save-name', (name) => {
         console.log(`entered name is ${name}`)
     })
+    
+    socket.on('join-room', (roomId, displayName) => {
+        console.log(`${displayName} wanted to enter room id ${roomId}`)
+    })
+
+    
 })
 
 // Store room data
