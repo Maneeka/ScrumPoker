@@ -45,6 +45,9 @@ io.on('connection', (socket) => {
     
     socket.on('join-room', (roomId, displayName) => {
         console.log(`${displayName} wanted to enter room id ${roomId}`)
+        //socket.to(roomId).emit('broadcastMember', displayName)
+        socket.join(roomId)
+        socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)
     })
 
     

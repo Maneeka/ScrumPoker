@@ -30,6 +30,10 @@ export function Home({socket}){
         console.log(`you connected. your socket id = ${socket.id}`)
     })
 
+    socket.on('recieve-room-message', (message) => {
+        console.log('broadcasted message to room is' + message)
+    })
+
     return <>
         <div>
             <input type="text" placeholder="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} />
