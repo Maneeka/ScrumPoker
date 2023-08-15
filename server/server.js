@@ -50,6 +50,15 @@ function removeMemberFromRoom(roomId, memberId){
     delete rooms[roomId][memberId]
 }
 
+function isDuplicate(roomId, name){
+    for(const memberId in rooms[roomId]){
+        if( name === rooms[roomId][memberId].name){ //name already exists in room
+            return true
+        }
+    }
+    return false
+}
+
 io.on('connection', (socket) => {
     console.log(`A user connected with id: ${socket.id}`);
     
@@ -58,17 +67,22 @@ io.on('connection', (socket) => {
     })
     
     socket.on('join-room', (roomId, displayName) => {
-        console.log(`${displayName} wanted to enter room id ${roomId}`)
-        socket.join(roomId)
-
-        addMemberToRoom(roomId, displayName, socket.id); //add member to stored rooms obj
-        
-        // Emit an event to notify all clients in the room about the updated member list
-        const updatedMembers = rooms[roomId]    //object containing all the member objects
-        io.to(roomId).emit('updateMembers', updatedMembers);
-        
-        
-        socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)    //sends entry msg to everyone else already present in the room
+        if(isDuplicate(roomId, displayName)){
+            // Emit the event to the specific socket ID
+            io.to(socket.id).emit('duplicate-name', displayName);
+        }
+        else{
+            console.log(`${displayName} wanted to enter room id ${roomId}`)
+            socket.join(roomId)
+            
+            addMemberToRoom(roomId, displayName, socket.id); //add member to stored rooms obj
+            
+            // Emit an event to notify all clients in the room about the updated member list
+            const updatedMembers = rooms[roomId]    //object containing all the member objects
+            io.to(roomId).emit('updateMembers', updatedMembers);
+            
+            socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)    //sends entry msg to everyone else already present in the room
+        }
     })
 
     socket.on('disconnecting', () => {

@@ -36,7 +36,13 @@ export function Home({socket}){
 
     socket.on('connect', () => {
         console.log(`you connected. your socket id = ${socket.id}`)
+        
+        socket.on('duplicate-name', duplicateName => {
+            alert(`${duplicateName} has already been taken. Please enter a different name`)
+            navigate('/'); // Navigate to the homepage 
+        })
     })
+    
 
     socket.on('recieve-room-message', (message) => {
         console.log('broadcasted message to room is' + message)
