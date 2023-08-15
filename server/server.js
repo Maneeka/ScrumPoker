@@ -13,7 +13,6 @@ const io = socketIo(server, {
 const path = require('path');
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions.js');
-const { Socket } = require('dgram');
 
 const PORT = process.env.PORT || 3500;
 
@@ -36,6 +35,17 @@ app.all('*', (req, res) => {
     }
 })
 
+//TODO
+// Store room data
+const rooms = {}; // roomId : {displayName: {memberinfo like id and vote}}
+
+function addMemberToRoom(roomId, displayName, socketId){
+    if (!rooms[roomId]) {   //this is the first time this room is being created
+        rooms[roomId] = {}   
+    }
+    rooms[roomId][displayName] = {memberId: socketId, vote: ''}
+}
+
 io.on('connection', (socket) => {
     console.log(`A user connected with id: ${socket.id}`);
     
@@ -45,16 +55,21 @@ io.on('connection', (socket) => {
     
     socket.on('join-room', (roomId, displayName) => {
         console.log(`${displayName} wanted to enter room id ${roomId}`)
-        //socket.to(roomId).emit('broadcastMember', displayName)
         socket.join(roomId)
-        socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)
+
+        addMemberToRoom(roomId, displayName, socket.id); //add member to stored rooms obj
+        
+        // Emit an event to notify all clients in the room about the updated member list
+        const updatedMembers = rooms[roomId]    //object containing all the member objects
+        io.to(roomId).emit('updateMembers', updatedMembers);
+        
+        
+        socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)    //sends entry msg to everyone else already present in the room
     })
 
     
 })
 
-// Store room data
-// const rooms = {}; // roomId : {members:[], votes: {}}
 
 // io.on('connection', (socket) => {
 //     console.log(`A user connected with id: ${socket.id}`);

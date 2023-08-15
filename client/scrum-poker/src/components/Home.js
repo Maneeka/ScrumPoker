@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export function Home({socket}){
     const [displayName, setDisplayName] = useState('');
+    const [finalName, setFinalName] = useState('');
     const [roomId, setRoomId] = useState('');
+    const navigate = useNavigate();
 
     const handleDisplayNameChange = (e) => {
         setDisplayName(e.target.value);
     };
     
     const handleSaveDisplayName = () => {
-        console.log("display name = " + displayName)
+        setFinalName(displayName);
         socket.emit('save-name', displayName)
     }
 
@@ -18,11 +21,16 @@ export function Home({socket}){
     }
 
     const handleJoinRoom = (e) => {
-        if(displayName === ''){
-            alert("Enter display name")
+        if(finalName === ''){
+            alert("Enter and Save display name")
+        }
+        else if(roomId === ''){
+            alert("Enter a Room Id")
         }
         else{
-            socket.emit('join-room', roomId, displayName)
+            socket.emit('join-room', roomId, displayName)   //joins room and sends entry msg to everyone else in the room
+
+            navigate(`/room/${encodeURIComponent(roomId)}`); // redirect to page with room info
         }
     }
 
@@ -36,7 +44,7 @@ export function Home({socket}){
 
     return <>
         <div>
-            <input type="text" placeholder="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} />
+            <input type="text" placeholder="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} /> 
             <button onClick={handleSaveDisplayName}>Save Name</button>
 
 
