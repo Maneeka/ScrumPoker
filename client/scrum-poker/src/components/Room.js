@@ -16,8 +16,8 @@ export function Room({socket}) {
           <h2>Room id: {id}</h2>
           <h3>Members:</h3>
           <ul>
-            {Object.keys(members).map((memberDisplayName) => (
-                <li key={members[memberDisplayName].memberId}>{memberDisplayName}</li>
+            {Object.keys(members).map((memberId) => (
+                <li key={memberId}>{members[memberId].name}</li>
             ))}
           </ul>
         </>

@@ -37,13 +37,17 @@ app.all('*', (req, res) => {
 
 //TODO
 // Store room data
-const rooms = {}; // roomId : {displayName: {memberinfo like id and vote}}
+const rooms = {}; // roomId : {socketId: {memberinfo like name and vote}}
 
 function addMemberToRoom(roomId, displayName, socketId){
     if (!rooms[roomId]) {   //this is the first time this room is being created
         rooms[roomId] = {}   
     }
-    rooms[roomId][displayName] = {memberId: socketId, vote: ''}
+    rooms[roomId][socketId] = {name: displayName, vote: ''}
+}
+
+function removeMemberFromRoom(roomId, memberId){
+    delete rooms[roomId][memberId]
 }
 
 io.on('connection', (socket) => {
@@ -67,23 +71,25 @@ io.on('connection', (socket) => {
         socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)    //sends entry msg to everyone else already present in the room
     })
 
-    
+    socket.on('disconnecting', () => {
+        const socketRooms = socket.rooms;
+
+        socketRooms.forEach((roomId) => {
+            if (roomId !== socket.id) { //  remove from every room other than own id room
+                removeMemberFromRoom(roomId, socket.id)
+
+                //Emit an event to notify other clients
+                const updatedMembers = rooms[roomId] 
+                io.to(roomId).emit('updateMembers', updatedMembers);
+                
+                socket.leave(roomId);
+            }
+        });
+
+        console.log(`Socket ${socket.id} is disconnecting`);
+      });
 })
 
-
-// io.on('connection', (socket) => {
-//     console.log(`A user connected with id: ${socket.id}`);
-
-//     socket.on('join', ({displayName, roomId} ) => {
-//         socket.join(roomId);
-
-//         if (!rooms[roomId]) {
-//             rooms[roomId] = {members: [], votes: {}};
-//         }
-//         rooms[roomId].members.push(displayName);
-
-//         io.to(roomId).emit('members', rooms[roomId]);
-//     });
 
 //     socket.on('vote', (vote) => {
 //         // Store user's vote and emit updated members list
@@ -92,19 +98,6 @@ io.on('connection', (socket) => {
 //         rooms[room][index] = `${socket.displayName} (Voted: ${vote})`;
 //         io.to(room).emit('members', rooms[room]);
 //     });
-
-//     socket.on('disconnect', () => {
-//         console.log('A user disconnected');
-
-//         // Remove user from the room members list
-//         const room = Object.keys(socket.rooms)[1];
-//         const index = rooms[room].indexOf(socket.displayName);
-//         if (index !== -1) {
-//         rooms[room].splice(index, 1);
-//         io.to(room).emit('members', rooms[room]);
-//         }
-//     });
-// });
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
