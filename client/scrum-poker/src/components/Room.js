@@ -24,7 +24,7 @@ export function Room({socket}) {
             </ul>
 
             <h2>Vote:</h2>
-            <Points socket={socket}/>                    
+            <Points socket={socket} roomId={id}/>                    
         </>
     );
 }

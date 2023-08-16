@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 
-export function Points({socket}){
+export function Points({socket, roomId}){
     const [activeButton, setActiveButton] = useState(null);
 
     const handleButtonClick = (buttonId) => {
         if (activeButton === buttonId) {
-          setActiveButton(null); // Toggle off the active button
+          setActiveButton(-1); // Toggle off the active button
         } else {
           setActiveButton(buttonId); // Set the clicked button as active
         }
     };
+
+    useEffect(() => {
+        if(activeButton !== null){  //dont emit anything when the inital setup is done
+            socket.emit('user-voted', activeButton, roomId);
+        }
+    }, [activeButton]); //emits the vote to the server after the activeButton value has been updated
 
     return (
         <>

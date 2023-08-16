@@ -59,6 +59,8 @@ function isDuplicate(roomId, name){
     return false
 }
 
+// function updateMemberVote(memberId, )
+
 io.on('connection', (socket) => {
     console.log(`A user connected with id: ${socket.id}`);
     
@@ -83,6 +85,16 @@ io.on('connection', (socket) => {
             
             socket.to(roomId).emit('recieve-room-message', `hi from ${displayName}`)    //sends entry msg to everyone else already present in the room
         }
+    })
+
+    socket.on('user-voted', (vote, roomId) => {
+        // if(vote === null){  //user toggled off their score => show as not voted yet
+
+        // }else{  //show as user has voted
+
+        // }
+        //updateMemberVote(socket.id, vote)
+        console.log(`user in room ${roomId} has voted : ${vote}`)
     })
 
     socket.on('disconnecting', () => {
