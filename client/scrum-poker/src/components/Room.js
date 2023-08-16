@@ -19,7 +19,7 @@ export function Room({socket}) {
             <h3>Members:</h3>
             <ul>
                 {Object.keys(members).map((memberId) => (
-                    <li key={memberId}>{members[memberId].name}</li>
+                    <li key={memberId}>{members[memberId].name} has voted {members[memberId].vote}</li>
                 ))}
             </ul>
 
