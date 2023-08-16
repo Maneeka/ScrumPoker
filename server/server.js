@@ -43,7 +43,7 @@ function addMemberToRoom(roomId, displayName, socketId){
     if (!rooms[roomId]) {   //this is the first time this room is being created
         rooms[roomId] = {}   
     }
-    rooms[roomId][socketId] = {name: displayName, vote: ''}
+    rooms[roomId][socketId] = {name: displayName, vote: null}
 }
 
 function removeMemberFromRoom(roomId, memberId){
@@ -100,6 +100,10 @@ io.on('connection', (socket) => {
 
         const updatedMembers = rooms[roomId] 
         io.to(roomId).emit('updateMembers', updatedMembers);
+    })
+
+    socket.on('show-votes', (roomId) => {
+        io.to(roomId).emit('display-votes'); 
     })
 
     socket.on('disconnecting', () => {
