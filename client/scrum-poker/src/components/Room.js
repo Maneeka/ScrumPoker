@@ -28,6 +28,20 @@ export function Room({socket}) {
         return vote !== null && vote !== -1 //returns true for any of the valid pointing scores
     }
 
+    const displayMajorityVotes = (allVotes) => {
+        let frequencyMap = {};
+        // Create a frequency map of values in the array
+        allVotes.forEach((vote) => {
+            frequencyMap[vote] = (frequencyMap[vote] || 0) + 1;
+        });
+
+        let vals = Object.values(frequencyMap)
+        let maxFreq = Math.max(...vals)
+
+        let topVotes = Object.keys(frequencyMap).filter(vote => frequencyMap[vote] === maxFreq)
+        return topVotes.join(', ')
+    }
+
     useEffect(() => {
         if(showVotes){
             socket.emit('show-votes', id)
@@ -55,6 +69,8 @@ export function Room({socket}) {
             <br/>  
 
             <Button variant="contained" onClick={handleShowVotes}>Show Votes</Button>
+
+            {showVotes ? displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote))) : ''}
         </>
     );
 }
