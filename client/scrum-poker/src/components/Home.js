@@ -13,14 +13,13 @@ export function Home({socket}){
     
     const handleSaveDisplayName = () => {
         setFinalName(displayName);
-        socket.emit('save-name', displayName)
     }
 
     const handleRoomIdChange = (e) => {
         setRoomId(e.target.value)
     }
 
-    const handleJoinRoom = (e) => {
+    const handleJoinRoom = () => {
         if(finalName === ''){
             alert("Enter and Save display name")
         }
@@ -28,7 +27,7 @@ export function Home({socket}){
             alert("Enter a Room Id")
         }
         else{
-            socket.emit('join-room', roomId, displayName)   //joins room and sends entry msg to everyone else in the room
+            socket.emit('join-room', roomId, displayName)   //joins user to room specified by roomId
 
             navigate(`/room/${encodeURIComponent(roomId)}`); // redirect to page with room info
         }
@@ -38,14 +37,9 @@ export function Home({socket}){
         console.log(`you connected. your socket id = ${socket.id}`)
         
         socket.on('duplicate-name', duplicateName => {
-            alert(`${duplicateName} has already been taken. Please enter a different name`)
-            navigate('/'); // Navigate to the homepage 
+            alert(`${duplicateName} has already been taken. Please enter a different name.`)
+            navigate('/'); // Navigate to the homepage to re-enter name
         })
-    })
-    
-
-    socket.on('recieve-room-message', (message) => {
-        console.log('broadcasted message to room is' + message)
     })
 
     return <>
@@ -53,10 +47,6 @@ export function Home({socket}){
             <input type="text" placeholder="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} /> 
             <button onClick={handleSaveDisplayName}>Save Name</button>
 
-
-            <br/>
-            <br/>
-            <button>Create New Room</button>
             <br/>
             <br/>
 
