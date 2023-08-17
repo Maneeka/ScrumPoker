@@ -7,7 +7,7 @@ import { green } from "@mui/material/colors";
 
 export function Room({socket}) {
     const { id } = useParams()
-    const [members, setMembers] = useState({}); //object containing all the {displayName: member obj} pairs
+    const [members, setMembers] = useState({}); //object containing all the {memberId: member obj} pairs
     const [showVotes, setShowVotes] = useState(false)
 
     useEffect(() => {
@@ -42,6 +42,14 @@ export function Room({socket}) {
         return topVotes.join(', ')
     }
 
+    const handleClearEstimates = () => {
+        socket.emit('clear-estimates', id)
+    }
+
+    socket.on('clear-selected-points', () => {
+        setShowVotes(false)
+    })
+
     useEffect(() => {
         if(showVotes){
             socket.emit('show-votes', id)
@@ -71,6 +79,9 @@ export function Room({socket}) {
             <Button variant="contained" onClick={handleShowVotes}>Show Votes</Button>
 
             {showVotes ? displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote))) : ''}
+        
+            <br/>
+            <Button variant="contained" color="secondary" onClick={handleClearEstimates}>Clear Estimates</Button>
         </>
     );
 }

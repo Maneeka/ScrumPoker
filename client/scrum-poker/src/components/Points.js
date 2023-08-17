@@ -18,6 +18,10 @@ export function Points({socket, roomId}){
         }
     }, [activeButton]); //emits the vote to the server after the activeButton value has been updated
 
+    socket.on('clear-selected-points', () => {
+        setActiveButton(null)
+    })
+    
     return (
         <>
             <Button variant={activeButton === 0 ? 'contained' : 'outlined'} color={activeButton === 0 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(0)} > 0 </Button>

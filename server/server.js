@@ -63,6 +63,12 @@ function updateMemberVote(memberId, vote, roomId){
     rooms[roomId][memberId].vote = vote;
 }
 
+function clearAllVotes(roomId){
+    for(const memberId in rooms[roomId]){
+        rooms[roomId][memberId].vote = null
+    }
+}
+
 io.on('connection', (socket) => {
     console.log(`A user connected with id: ${socket.id}`);
     
@@ -90,11 +96,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('user-voted', (vote, roomId) => {
-        // if(vote === null){  //user toggled off their score => show as not voted yet
-
-        // }else{  //show as user has voted
-
-        // }
         updateMemberVote(socket.id, vote, roomId)
         console.log(`user in room ${roomId} has voted : ${vote}`)
 
@@ -104,6 +105,14 @@ io.on('connection', (socket) => {
 
     socket.on('show-votes', (roomId) => {
         io.to(roomId).emit('display-votes'); 
+    })
+
+    socket.on('clear-estimates', (roomId) => {
+        clearAllVotes(roomId)
+
+        const updatedMembers = rooms[roomId] 
+        io.to(roomId).emit('updateMembers', updatedMembers);
+        io.to(roomId).emit('clear-selected-points');
     })
 
     socket.on('disconnecting', () => {
