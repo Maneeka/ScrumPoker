@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { MemberTable } from "./MemberTable";
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
+import { MajorityVotes } from "./MajorityVotes";
 
 
 export function Room({socket}) {
@@ -42,7 +42,7 @@ export function Room({socket}) {
         let maxFreq = Math.max(...vals)
 
         let topVotes = Object.keys(frequencyMap).filter(vote => frequencyMap[vote] === maxFreq)
-        return topVotes.join(', ')
+        return topVotes
     }
 
     const handleClearEstimates = () => {
@@ -72,10 +72,10 @@ export function Room({socket}) {
 
             <Box textAlign='center' >
                 <Button variant="contained" sx={{backgroundColor:"#427c8a", margin: 1}} onClick={handleShowVotes}>Show Votes</Button>
-                <Button variant="contained" color="secondary" onClick={handleClearEstimates}>Clear Estimates</Button>
+                <Button variant="contained" sx={{backgroundColor:"#6c6692"}} onClick={handleClearEstimates}>Clear Estimates</Button>
             </Box>
 
-            {showVotes ? displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote))) : <h2>hi</h2>}
+            {showVotes ? <MajorityVotes topVotes={displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote)))}/> : ''}
     
             <br/>
         </>
