@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import * as React from 'react';
 
 export function Home({socket}){
     const [displayName, setDisplayName] = useState('');
