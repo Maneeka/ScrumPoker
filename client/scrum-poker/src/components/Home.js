@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export function Home({socket}){
     const [displayName, setDisplayName] = useState('');
@@ -45,14 +48,15 @@ export function Home({socket}){
 
     return <>
         <div>
-            <input type="text" placeholder="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} /> 
-            <button onClick={handleSaveDisplayName}>Save Name</button>
+            <Box textAlign='center' sx={{marginTop:25}}>
+                <TextField id="name-input" label="Enter Display Name" value={displayName} onChange={handleDisplayNameChange} variant="standard"  InputLabelProps={{ style: {color: '#304674', fontFamily:"monospace", fontSize:15}}}/>
+                <Button variant="contained" sx={{backgroundColor:"#427c8a", margin: 1, height: 35}} onClick={handleSaveDisplayName}>Save Name</Button>
+            </Box>
 
-            <br/>
-            <br/>
-
-            <input type="text" placeholder="Enter Room Id" value={roomId} onChange={handleRoomIdChange} />
-            <button onClick={handleJoinRoom}>Join Room</button>
+            <Box textAlign='center' >
+                <TextField id="room-input" label="Enter Room Id" value={roomId} onChange={handleRoomIdChange} variant="standard"  InputLabelProps={{ style: {color: '#304674', fontFamily:"monospace", fontSize:15}}}/>
+                <Button variant="contained" sx={{backgroundColor:"#2E3B55", margin: 1, height: 35}} onClick={handleJoinRoom}>Join Room</Button>
+            </Box>
         </div>
     </>
 }
