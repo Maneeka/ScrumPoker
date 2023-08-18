@@ -12,17 +12,22 @@ import { green } from "@mui/material/colors";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
+      backgroundColor: '#262545',
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
+      fontSize: 15,
+      color: theme.palette.common.white,
+      fontWeight: 'bold'
     },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#6b7a99'
+    },
+    '&:nth-of-type(even)': {
+      backgroundColor: '#92a7ba',
     },
     // hide last border
     '&:last-child td, &:last-child th': {
@@ -45,10 +50,10 @@ export function MemberTable({members, isValidVote, showVotes}) {
                 <StyledTableRow key={memberId}>
                     <StyledTableCell component="th" scope="row">
                     {members[memberId].name} 
-                    {isValidVote(members[memberId].vote)  ? <CheckCircleOutlineIcon sx={{ color: green[300], fontSize: 18 }}/> : ''}
+                    {isValidVote(members[memberId].vote)  ? <CheckCircleOutlineIcon sx={{ color: '#faf3dd', fontSize: 18, marginLeft: 1 }}/> : ''}
                     </StyledTableCell>
                     
-                    <StyledTableCell align="right">{(showVotes && isValidVote(members[memberId].vote)) ? `${members[memberId].vote}` : ''}</StyledTableCell>
+                    <StyledTableCell align="right" style={{fontSize: 17}}>{(showVotes && isValidVote(members[memberId].vote)) ? `${members[memberId].vote}` : ''}</StyledTableCell>
                 </StyledTableRow>
                 ))}
             </TableBody>
