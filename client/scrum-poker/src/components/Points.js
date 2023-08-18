@@ -23,7 +23,7 @@ export function Points({socket, roomId}){
     })
     
     return (
-        <>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Button variant={activeButton === 0 ? 'contained' : 'outlined'} color={activeButton === 0 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(0)} > 0 </Button>
             <Button variant={activeButton === 0.5 ? 'contained' : 'outlined'} color={activeButton === 0.5 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(0.5)} > 0.5 </Button>
             <Button variant={activeButton === 1 ? 'contained' : 'outlined'} color={activeButton === 1 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(1)} >1 </Button>
@@ -33,6 +33,6 @@ export function Points({socket, roomId}){
             <Button variant={activeButton === 8 ? 'contained' : 'outlined'} color={activeButton === 8 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(8)} >8 </Button>
             <Button variant={activeButton === 13 ? 'contained' : 'outlined'} color={activeButton === 13 ? 'secondary' : 'primary'} onClick={() => handleButtonClick(13)} >13 </Button>
                     
-        </>
+        </div>
     );
 }

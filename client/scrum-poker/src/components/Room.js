@@ -2,9 +2,11 @@ import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { Points } from "./Points";
 import Button from '@mui/material/Button';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { green } from "@mui/material/colors";
 import { MemberTable } from "./MemberTable";
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+
 
 export function Room({socket}) {
     const { id } = useParams()
@@ -59,21 +61,23 @@ export function Room({socket}) {
 
     return (
         <>
-            <h2>Room id: {id}</h2>
+            <Typography level="h1" sx={{fontFamily: 'monospace', fontWeight: 700, letterSpacing: '.3rem', fontSize:40, textAlign:"center", color:"#2a3142"}}>ROOM ID: {id}</Typography>
 
             <MemberTable members={members} isValidVote={isValidVote} showVotes={showVotes}/>
 
-            <h2>Vote:</h2>
-            <Points socket={socket} roomId={id}/> 
+            <Typography level="h1" sx={{fontFamily: 'monospace', fontWeight: 700, letterSpacing: '.3rem', fontSize:40, textAlign:"center", color:"#2a3142", marginTop:5}}>VOTE:</Typography>
+            <Points socket={socket} roomId={id} /> 
             
             <br/>  
 
-            <Button variant="contained" onClick={handleShowVotes}>Show Votes</Button>
+            <Box textAlign='center' >
+                <Button variant="contained" sx={{backgroundColor:"#427c8a", margin: 1}} onClick={handleShowVotes}>Show Votes</Button>
+                <Button variant="contained" color="secondary" onClick={handleClearEstimates}>Clear Estimates</Button>
+            </Box>
 
-            {showVotes ? displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote))) : ''}
-        
+            {showVotes ? displayMajorityVotes(Object.values(members).map((member) => member.vote).filter((vote) => isValidVote(vote))) : <h2>hi</h2>}
+    
             <br/>
-            <Button variant="contained" color="secondary" onClick={handleClearEstimates}>Clear Estimates</Button>
         </>
     );
 }
