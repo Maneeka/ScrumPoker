@@ -4,6 +4,7 @@ import { Points } from "./Points";
 import Button from '@mui/material/Button';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { green } from "@mui/material/colors";
+import { MemberTable } from "./MemberTable";
 
 export function Room({socket}) {
     const { id } = useParams()
@@ -59,17 +60,8 @@ export function Room({socket}) {
     return (
         <>
             <h2>Room id: {id}</h2>
-            <h3>Members:</h3>
-            <ul>
-                {Object.keys(members).map((memberId) => (
-                    <li key={memberId}>{members[memberId].name} 
 
-                    {/* show green check icon if the member has voted (ie, vote is not null or -1) */}
-                    {isValidVote(members[memberId].vote)  ? <CheckCircleOutlineIcon sx={{ color: green[300], fontSize: 18 }}/> : ''}
-                    
-                    {(showVotes && isValidVote(members[memberId].vote)) ? `has voted ${members[memberId].vote}` : ''}</li>
-                ))}
-            </ul>
+            <MemberTable members={members} isValidVote={isValidVote} showVotes={showVotes}/>
 
             <h2>Vote:</h2>
             <Points socket={socket} roomId={id}/> 

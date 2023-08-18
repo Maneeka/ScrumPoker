@@ -3,13 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Home } from './components/Home'
 import { Room } from './components/Room';
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import StyleIcon from '@mui/icons-material/Style';
 
 const socket = io('http://localhost:3500'); 
